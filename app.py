@@ -141,6 +141,13 @@ def logout():
 def admin_logout():
     session.pop("admin_access", None)
     return redirect(url_for("admin_login"))
+import os
+
+if __name__ == '__main__':
+    # ดึง Port จาก Render (ถ้าไม่มีให้ใช้ 5000)
+    port = int(os.environ.get("PORT", 5000))
+    # ต้องเปิด host เป็น 0.0.0.0 เพื่อให้ Render ตรวจเจอ
+    app.run(host="0.0.0.0", port=port)
 
 if __name__ == "__main__":
     app.run(debug=True)
