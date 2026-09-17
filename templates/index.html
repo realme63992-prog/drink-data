@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ร้านเครื่องดื่ม Café</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * { box-sizing: border-box; font-family: 'Prompt', sans-serif; transition: all 0.25s ease; }
+        
+        /* พื้นหลังไล่เฉดสี ดำ -> ขาว */
+        body { 
+            margin: 0; 
+            padding: 30px 20px; 
+            color: #e0e0e0; 
+            background: linear-gradient(180deg, #0f1115 0%, #2f3640 50%, #f5f6fa 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        header h1 { margin: 0; color: #ffffff; font-size: 26px; display: flex; align-items: center; gap: 12px; }
+        header h1 i { color: #ff9f43; }
+
+        .admin-link {
+            color: #a0a5b5;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 14px;
+            background: rgba(22, 25, 32, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        .admin-link:hover { color: #fff; background: #222733; }
+
+        /* --- ปุ่มสลับหมวดหมู่ (Category Tabs) --- */
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .tab-btn {
+            background: rgba(22, 25, 32, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a0a5b5;
+            padding: 10px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .tab-btn.active {
+            background: #ff9f43;
+            color: #0f1115;
+            font-weight: 600;
+            border-color: #ff9f43;
+            box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3);
+        }
+
+        /* --- รายการสินค้า --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #161920;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .card:hover { transform: translateY(-5px); border-color: rgba(255, 159, 67, 0.4); }
+        
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #222733;
+        }
+        .card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { margin: 0 0 6px 0; font-size: 17px; color: #ffffff; font-weight: 600; }
+        
+        .badge-container { display: flex; gap: 6px; margin-bottom: 12px; }
+        .category-badge {
+            display: inline-block;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.08);
+            color: #a0a5b5;
+        }
+        .bestseller-badge {
+            background: #ff9f43;
+            color: #0f1115;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .price-tag { color: #2ed573; font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+
+        .sweetness-select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #2a2f3d;
+            background: #0f1115;
+            color: #ffffff;
+            font-size: 13px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .btn-add {
+            width: 100%;
+            padding: 10px;
+            background: #2ed573;
+            color: #0f1115;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-add:hover { background: #26af5f; }
+
+        /* --- ตะกร้าสินค้า --- */
+        .cart-section {
+            margin-top: 40px;
+            background: #161920;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .cart-section h2 { margin-top: 0; color: #fff; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .btn-checkout {
+            width: 100%;
+            padding: 14px;
+            background: #ff9f43;
+            color: #0f1115;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-checkout:hover { background: #feca57; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-mug-hot"></i> ร้านเครื่องดื่ม Café</h1>
+            <div style="display: flex; gap: 10px;">
+                <a href="/bestsellers" class="admin-link"><i class="fa-solid fa-chart-line"></i> รายงานขายดี</a>
+                <a href="/logout" class="admin-link" style="color: #ff6b6b;"><i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ</a>
+            </div>
+        </header>
+
+        <!-- หมวดหมู่เครื่องดื่ม (Tabs Filter) -->
+        <div class="category-tabs">
+            <button class="tab-btn active" onclick="filterCategory('all', this)">
+                <i class="fa-solid fa-border-all"></i> ทั้งหมด
+            </button>
+            <button class="tab-btn" onclick="filterCategory('กาแฟ', this)">
+                <i class="fa-solid fa-mug-saucer"></i> กาแฟ
+            </button>
+            <button class="tab-btn" onclick="filterCategory('ชา', this)">
+                <i class="fa-solid fa-leaf"></i> ชา
+            </button>
+            <button class="tab-btn" onclick="filterCategory('อื่นๆ', this)">
+                <i class="fa-solid fa-glass-water"></i> อื่นๆ
+            </button>
+        </div>
+
+        <!-- รายการสินค้า -->
+        <div class="grid" id="drinkGrid">
+            {% for drink in drinks %}
+            <div class="card" data-category="{{ drink.category if drink.category else 'อื่นๆ' }}">
+                <img src="{{ drink.image_url if drink.image_url else 'https://via.placeholder.com/300x200?text=No+Image' }}" class="card-img" alt="{{ drink.name }}">
+                <div class="card-body">
+                    <div>
+                        <div class="badge-container">
+                            <span class="category-badge">{{ drink.category if drink.category else 'อื่นๆ' }}</span>
+                            {% if drink.is_bestseller %}
+                                <span class="bestseller-badge"><i class="fa-solid fa-fire"></i> ขายดี</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="card-title">{{ drink.name }}</h3>
+                        <div class="price-tag">{{ "{:,.2f}".format(drink.price) }} บาท</div>
+                    </div>
+                    <div>
+                        <select class="sweetness-select" id="sweetness-{{ drink.id }}">
+                            <option value="100%">หวานปกติ (100%)</option>
+                            <option value="70%">หวานน้อย (70%)</option>
+                            <option value="50%">หวานน้อย (50%)</option>
+                            <option value="0%">ไม่หวาน (0%)</option>
+                        </select>
+                        <button class="btn-add" onclick="addToCart('{{ drink.id }}', '{{ drink.name }}', {{ drink.price }})">
+                            <i class="fa-solid fa-cart-plus"></i> เพิ่มลงตะกร้า
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- ตะกร้าสินค้า -->
+        <div class="cart-section">
+            <h2><i class="fa-solid fa-basket-shopping"></i> ตะกร้าสินค้า</h2>
+            <div id="cartItems"><p style="color: #787f95;">ยังไม่มีสินค้าในตะกร้า</p></div>
+            <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 18px; font-weight: 600;">
+                <span>ราคารวมทั้งหมด:</span>
+                <span id="totalPrice" style="color: #2ed573;">0.00 บาท</span>
+            </div>
+            <button class="btn-checkout" onclick="submitOrder()"><i class="fa-solid fa-paper-plane"></i> ยืนยันการสั่งซื้อ</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        // ฟังก์ชันสลับกรองหมวดหมู่เครื่องดื่ม
+        function filterCategory(category, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const cards = document.querySelectorAll('#drinkGrid .card');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (category === 'all' || cardCat === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function addToCart(id, name, price) {
+            const sweetness = document.getElementById(`sweetness-${id}`).value;
+            const existingIndex = cart.findIndex(item => item.drink_id === id && item.sweetness === sweetness);
+
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity += 1;
+            } else {
+                cart.push({ drink_id: id, name: name, price: price, sweetness: sweetness, quantity: 1 });
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            const totalPriceSpan = document.getElementById('totalPrice');
+
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p style="color: #787f95;">ยังไม่มีสินค้าในตะกร้า</p>';
+                totalPriceSpan.innerText = '0.00 บาท';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                html += `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.name}</strong> <small style="color: #a0a5b5;">(${item.sweetness})</small><br>
+                            <small style="color: #2ed573;">${item.price} x ${item.quantity} = ${itemTotal.toFixed(2)} บาท</small>
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #ff6b6b; cursor: pointer;">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            cartItemsDiv.innerHTML = html;
+            totalPriceSpan.innerText = `${total.toFixed(2)} บาท`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function submitOrder() {
+            if (cart.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'ตะกร้าสินค้าว่างเปล่า',
+                    text: 'กรุณาเลือกเครื่องดื่มก่อนทำการสั่งซื้อ',
+                    confirmButtonColor: '#ff9f43'
+                });
+                return;
+            }
+
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            Swal.fire({
+                title: 'กำลังดำเนินการ...',
+                text: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            fetch('/order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart: cart, total_price: totalPrice })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สั่งซื้อสำเร็จ!',
+                        text: `หมายเลขคำสั่งซื้อ: #${data.order_id}`,
+                        confirmButtonColor: '#2ed573'
+                    }).then(() => {
+                        cart = [];
+                        updateCartUI();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: data.message,
+                        confirmButtonColor: '#ff6b6b'
+                    });
+                }
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เชื่อมต่อล้มเหลว',
+                    text: err.message,
+                    confirmButtonColor: '#ff6b6b'
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบหน้าร้าน - Café</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Prompt', sans-serif; transition: all 0.25s ease; }
+        
+        /* พื้นหลังเฉดสีดำมาขาว */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(180deg, #0f1115 0%, #353b48 50%, #f5f6fa 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            background: #161920;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .login-icon { 
+            font-size: 50px; 
+            color: #2ed573; 
+            margin-bottom: 15px; 
+        }
+
+        h2 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+        p { margin: 0 0 25px 0; color: #a0a5b5; font-size: 14px; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 13px; color: #a0a5b5; margin-bottom: 8px; }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid #2a2f3d;
+            background: #0f1115;
+            color: #ffffff;
+            font-size: 16px;
+            outline: none;
+        }
+        input[type="password"]:focus { border-color: #2ed573; }
+
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            background: #2ed573;
+            color: #0f1115;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+            margin-top: 10px;
+        }
+        .btn-login:hover { 
+            background: #26af5f; 
+            transform: translateY(-2px); 
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+
+        .admin-link { 
+            display: inline-block; 
+            margin-top: 20px; 
+            color: #787f95; 
+            font-size: 13px; 
+            text-decoration: none; 
+        }
+        .admin-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="login-icon"><i class="fa-solid fa-mug-hot"></i></div>
+        <h2>เข้าเลือกร้านซื้อน้ำ</h2>
+        <p>กรุณากรอกรหัสผ่านเพื่อเข้าใช้งานหน้าร้าน</p>
+
+        {% if error %}
+            <div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
+        {% endif %}
+
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="password"><i class="fa-solid fa-key"></i> รหัสผ่านหน้าร้าน (Default: 1111)</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required autofocus>
+            </div>
+            <button type="submit" class="btn-login">เข้าสู่หน้าร้าน <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+
+        <a href="/admin/login" class="admin-link"><i class="fa-solid fa-user-shield"></i> เข้าสู่ระบบหลังบ้าน (Admin)</a>
+    </div>
+
+</body>
+</html>

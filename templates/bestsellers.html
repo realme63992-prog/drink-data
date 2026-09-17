@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานเครื่องดื่มขายดี - Café Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Prompt', sans-serif; transition: all 0.25s ease; }
+        body { 
+            margin: 0; 
+            padding: 30px 20px; 
+            color: #e0e0e0; 
+            background: #0f1115;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #22262f;
+        }
+        header h1 { 
+            margin: 0; 
+            color: #ffffff; 
+            font-size: 24px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+        }
+        header h1 i { color: #ff9f43; }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-nav {
+            color: #a0a5b5;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 14px;
+            background: #181b22;
+            border: 1px solid #2a2f3d;
+            border-radius: 8px;
+        }
+        .btn-nav:hover { color: #fff; background: #222733; }
+        .btn-logout {
+            color: #ee5253;
+            border-color: rgba(238, 82, 83, 0.3);
+        }
+        .btn-logout:hover {
+            background: rgba(238, 82, 83, 0.15);
+            color: #ff6b6b;
+        }
+
+        .report-card {
+            background: #161920;
+            border: 1px solid #232834;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #1f232e;
+        }
+        th {
+            color: #787f95;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        td {
+            font-size: 15px;
+            color: #ffffff;
+        }
+        tr:last-child td { border-bottom: none; }
+        
+        .rank-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            background: #222733;
+            color: #a0a5b5;
+        }
+        tr:nth-child(1) .rank-badge { background: #ff9f43; color: #0f1115; }
+        tr:nth-child(2) .rank-badge { background: #a0a5b5; color: #0f1115; }
+        tr:nth-child(3) .rank-badge { background: #cd7f32; color: #ffffff; }
+
+        .price-text {
+            color: #2ed573;
+            font-weight: 600;
+        }
+        .empty-data {
+            text-align: center;
+            padding: 40px 0;
+            color: #5a6072;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-chart-line"></i> รายงานเครื่องดื่มขายดี</h1>
+            <div class="header-actions">
+                <a href="/" class="btn-nav"><i class="fa-solid fa-store"></i> หน้าร้าน</a>
+                <a href="/logout" class="btn-nav btn-logout"><i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ</a>
+            </div>
+        </header>
+
+        <div class="report-card">
+            {% if items %}
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">อันดับ</th>
+                        <th>ชื่อเครื่องดื่ม</th>
+                        <th style="text-align: center;">จำนวนที่ขายได้</th>
+                        <th style="text-align: right;">ยอดขายรวม</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <span class="rank-badge">{{ loop.index }}</span>
+                        </td>
+                        <td><strong>{{ item.name }}</strong></td>
+                        <td style="text-align: center;">{{ item.total_qty }} แก้ว</td>
+                        <td style="text-align: right;" class="price-text">{{ "{:,.2f}".format(item.total_revenue) }} บาท</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-data">
+                <i class="fa-solid fa-inbox" style="font-size: 36px; margin-bottom: 10px;"></i>
+                <p>ยังไม่มีข้อมูลการขายในขณะนี้</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
